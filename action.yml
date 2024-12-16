@@ -1,0 +1,42 @@
+name: "Run Bundler Audit"
+description: "Runs bundle-audit check --update and outputs results."
+
+outputs:
+  has_vulnerabilities:
+    description: "True if vulnerabilities are found, false otherwise"
+    value: ${{ steps.check_vulnerabilities.outputs.has_vulnerabilities }}
+  audit_output:
+    description: "The full output from bundle-audit"
+    value: ${{ steps.check_vulnerabilities.outputs.audit_output }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+
+    - name: Install Bundler Audit
+      run: gem install bundler-audit
+      shell: bash
+
+    - name: Check out code
+      uses: actions/checkout@v4
+
+    - name: Run Bundler Audit
+      id: audit
+      run: |
+        bundle-audit check --update > audit_output.txt || true
+      shell: bash
+
+    - name: Check for Vulnerabilities
+      id: check_vulnerabilities
+      run: |
+        if grep -q "Vulnerabilities found!" audit_output.txt; then
+          echo "has_vulnerabilities=true" >> $GITHUB_OUTPUT
+        else
+          echo "has_vulnerabilities=false" >> $GITHUB_OUTPUT
+        fi
+
+        audit_output=$(jq -Rs . < audit_output.txt)
+        echo "audit_output=$audit_output" >> $GITHUB_OUTPUT
+      shell: bash
