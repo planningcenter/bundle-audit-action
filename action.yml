@@ -12,15 +12,15 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - name: Check out code
+      uses: actions/checkout@v4
+
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
 
     - name: Install Bundler Audit
       run: gem install bundler-audit
       shell: bash
-
-    - name: Check out code
-      uses: actions/checkout@v4
 
     - name: Run Bundler Audit
       id: audit
