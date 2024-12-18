@@ -1,6 +1,12 @@
 name: "Run Bundler Audit"
 description: "Runs bundle-audit check --update and outputs results."
 
+inputs:
+  ignore_list:
+    description: "Space-separated list of CVEs to ignore (e.g., CVE-2023-26141 CVE-2021-41182 CVE-2021-41183)"
+    required: false
+    default: ""
+
 outputs:
   has_vulnerabilities:
     description: "True if vulnerabilities are found, false otherwise"
@@ -25,7 +31,7 @@ runs:
     - name: Run Bundler Audit
       id: audit
       run: |
-        bundle-audit check --update > audit_output.txt || true
+        bundle-audit check --update --ignore ${{ inputs.ignore_list }} > audit_output.txt || true
       shell: bash
 
     - name: Check for Vulnerabilities

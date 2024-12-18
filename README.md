@@ -8,7 +8,9 @@ See:
 
 ## Inputs
 
-None.
+| Name | Description | Required | Default |
+|:-:|:-:|:-:|:-:|
+| `ignore_list` | "Space-separated list of CVEs to ignore (e.g., CVE-2023-26141 CVE-2021-41182 CVE-2021-41183)" | false | "" |
 
 ## Outputs
 
