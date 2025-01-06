@@ -31,7 +31,7 @@ runs:
     - name: Run Bundler Audit
       id: audit
       run: |
-        bundle-audit check --update --ignore ${{ inputs.ignore_list }} > audit_output.txt || true
+        bundle-audit check --update ${${{ inputs.ignore_list }}:+--ignore ${{ inputs.ignore_list }}} > audit_output.txt || true
       shell: bash
 
     - name: Check for Vulnerabilities
